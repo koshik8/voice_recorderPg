@@ -1,0 +1,33 @@
+//android\build.gradle
+
+buildscript {
+    repositories {
+        google() // Google's Maven repository
+        mavenCentral() // Maven Central repository
+    }
+    dependencies {
+        // Ensure that AGP (Android Gradle Plugin) is updated to at least version 8.2.1
+        classpath 'com.android.tools.build:gradle:8.2.1'  // Make sure the version is compatible with Java 21+
+        // Ensure that Kotlin plugin version is correct
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.22'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.buildDir = "../build"
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    project.evaluationDependsOn(":app")
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
