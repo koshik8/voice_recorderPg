@@ -274,11 +274,11 @@ class _AllInOneAppState extends State<AllInOneApp> {
   Future<void> _playRecording() async {
     if (_audioPath != null) {
       await _audioPlayer.setFilePath(_audioPath!);
-      totalduration = _audioPlayer.duration?.inSeconds.toDouble() ?? 0;
+      totalduration = _audioPlayer.duration?.inMicroseconds.toDouble()  ?? 0;
       _audioPlayer.play();
       _audioPlayer.positionStream.listen((position) {
         setState(() {
-          currentposition = position.inSeconds.toDouble();
+          currentposition = position.inMicroseconds.toDouble();
           _isPlay = true;
         });
       });
@@ -466,11 +466,12 @@ class _AllInOneAppState extends State<AllInOneApp> {
               ),
             if (_isPlay)
               Slider(
-                  value: currentposition,
+                  value: (currentposition<totalduration)?currentposition:totalduration,
                   max: totalduration,
                   onChanged: (value) => {
                         setState(() {
-                          currentposition = value;
+                          if(currentposition<totalduration)
+                            currentposition = value;
                         }),
                         _audioPlayer.seek(Duration(seconds: value.toInt()))
                       }),
